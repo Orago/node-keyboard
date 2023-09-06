@@ -6,6 +6,10 @@
     "install": "node-gyp clean & node-gyp configure & node-gyp rebuild",
     "qbuild": "node-gyp rebuild"
   },
+	"repository": {
+    "type": "git",
+    "url": "https://github.com/orago/node-keyboard.git"
+  },
   "dependencies": {
     "nan": "^2.17.0"
   },
