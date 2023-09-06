@@ -1,0 +1,16 @@
+{
+  "name": "my-addon",
+  "version": "1.0.0",
+  "description": "My Node.js add-on",
+  "scripts": {
+    "install": "node-gyp rebuild",
+    "ah": "node-gyp clean & node-gyp configure",
+    "build": "node-gyp clean & node-gyp configure & node-gyp rebuild",
+    "qbuild": "node-gyp rebuild"
+  },
+  "dependencies": {
+    "keycode": "^2.2.1",
+    "nan": "^2.17.0"
+  },
+  "gypfile": true
+}
