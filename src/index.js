@@ -1,10 +1,10 @@
 const { CharCode, KeyboardEvent } = require('./utils.js');
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+const { Worker, isMainThread } = require('worker_threads');
 
 const instances = [];
 
 if (isMainThread){
-	const worker = new Worker('./src/worker.js', { workerData: 42 });
+	const worker = new Worker(__dirname + '/worker.js', { workerData: 42 });
 	
 	worker.on('message', (result) => {
 		for (const instance of instances)
