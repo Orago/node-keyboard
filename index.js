@@ -25,11 +25,13 @@ class CharCode {
 
 
 class KeyboardEvent {
+	down = null;
 	altKey = false;
 	charCode = -1;
 	key = null;
 
 	constructor (charCode, options){
+		this.down = options?.down == true;
 		this.altKey = options?.alt == true;
 		this.charCode = charCode;
 		this.key = CharCode.toString(charCode);
@@ -48,8 +50,8 @@ class KeyLogger {
 		this.#started = true;
 
 		keylogger.KeyDown(
-			k => this.#handleDown(k),
-			k => this.#handleUp(k)
+			k => this.#handleKey(k, true),
+			k => this.#handleKey(k, false)
 		);
 
 		setInterval(() => {}, 1000);
@@ -63,30 +65,17 @@ class KeyLogger {
 		];
 	}
 
-	#handleDown (keyCode){
-		if (this.pressed.hasOwnProperty(keyCode))
-			return;
+	#handleKey (keyCode, down){
+		if (this.pressed.hasOwnProperty(keyCode) == down) return;
 
-		this.pressed[keyCode] = true;
-
-		const keyEvents = this.keyEvents(keyCode);
-
-		if (Array.isArray(keyEvents))
-			for (const event of keyEvents)
-				event(new KeyboardEvent(keyCode, { ...this.options, down: true }));
-	}
-
-	#handleUp (keyCode){
-		if (this.pressed.hasOwnProperty(keyCode) != true)
-			return;
-		
-		delete this.pressed[keyCode];
+		if (down) this.pressed[keyCode] = true;
+		else delete this.pressed[keyCode];
 
 		const keyEvents = this.keyEvents(keyCode);
 
 		if (Array.isArray(keyEvents))
 			for (const event of keyEvents)
-				event(new KeyboardEvent(keyCode, { ...this.options, down: false }));
+				event(new KeyboardEvent(keyCode, { ...this.options, down: down }));
 	}
 
 	on (key, event){
@@ -126,8 +115,8 @@ class KeyLogger {
 }
 const hook = new KeyLogger;
 
-hook.on('a', () => {
-	console.log('a was pressed')
+hook.on('a', (s) => {
+	console.log('a was pressed', s.down)
 });
 
 hook.start();
