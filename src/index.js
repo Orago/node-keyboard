@@ -1,5 +1,21 @@
-const keylogger = require('../build/Release/keyboard-addon.node');
 const { CharCode, KeyboardEvent } = require('./utils.js');
+const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+
+const instances = [];
+
+if (isMainThread){
+	const worker = new Worker('./src/worker.js', { workerData: 42 });
+	
+	worker.on('message', (result) => {
+		for (const instance of instances)
+			instance.handleKey(result.key, result.down == true);
+	});
+
+	worker.postMessage('start');
+}
+
+// Keep keyboard alive
+setInterval(() => {}, 1000);
 
 class NodeKeyboard {
 	events = [];
@@ -12,21 +28,24 @@ class NodeKeyboard {
 	};
 
 	#started = false;
+
+	constructor (){
+		instances.push(this);
+	}
+
+	kill (){
+		instances = instances.filter(i => i != this);
+		this.events = [];
+	}
 	
 	start (){
 		if (this.#started == true) return;
+		instances.push(this);
 
 		this.#started = true;
-
-		keylogger.KeyDown(
-			k => this.#handleKey(k, true),
-			k => this.#handleKey(k, false)
-		);
-
-		setInterval(() => {}, 1000);
 	}
 
-	#handleKey (keyCode, down){
+	handleKey (keyCode, down){
 		if (this.pressed.hasOwnProperty(keyCode) == down) return;
 
 		if (down) this.pressed[keyCode] = true;
