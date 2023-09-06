@@ -1,13 +1,12 @@
 {
-  "name": "my-addon",
-  "version": "1.0.0",
-  "description": "My Node.js add-on",
+  "name": "@orago/node-keyboard",
+  "version": "1.0.4",
+  "description": "NodeJS Keyboard Logger",
   "scripts": {
     "install": "node-gyp clean & node-gyp configure & node-gyp rebuild",
     "qbuild": "node-gyp rebuild"
   },
   "dependencies": {
-    "keycode": "^2.2.1",
     "nan": "^2.17.0"
   },
   "gypfile": true

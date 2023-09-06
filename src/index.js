@@ -1,7 +1,7 @@
 const keylogger = require('../build/Release/keyboard-addon.node');
 const { CharCode, KeyboardEvent } = require('./utils.js');
 
-class KeyLogger {
+class NodeKeyboard {
 	events = [];
 	pressed = {};
 	options = {
@@ -65,22 +65,5 @@ class KeyLogger {
 		}
 	}
 }
-const hook = new KeyLogger;
 
-hook.on((s) => {
-	console.log(s.key, 'pressed:', s.down)
-});
-
-hook.start();
-
-
-// keylogger.KeyDown(
-// 	k => {
-// 		console.log(`Keycode: ${k}, (${CharCode.toString(k)})`)
-// 	},
-// 	() => {
-// 		console.log('released')
-// 	}
-// );
-
-// Keep the Node.js application running
+module.exports = NodeKeyboard;
